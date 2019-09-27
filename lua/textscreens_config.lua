@@ -63,5 +63,5 @@ MaxTextScreenLimit = {
 	user = 1,
 	--superadmin = 1,
 }
--- This is the fall back max textscreens incase the rank could be be found.
+-- This is the fall back max textscreens incase the rank coulddn't be found.
 FailsafeMaxTextscreens = 2
