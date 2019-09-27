@@ -396,10 +396,15 @@ function TOOL.BuildCPanel(CPanel)
 		sliders[i]:SetConVar("textscreen_size" .. i)
 		sliders[i].OnValueChanged = function(panel, value)
 			fontsize[i] = math.Round(tonumber(value))
-			if GetConVar("textscreen_size" .. i):GetInt() < TextMinSize or GetConVar("textscreen_size" .. i):GetInt() > TextMaxSize then
+			if GetConVar("textscreen_size" .. i):GetInt() < TextMinSize then
 				sliders[i]:SetValue(GetConVar("textscreen_size" .. TextMinSize))
 				if PrintScreenAbuse == true then
-					print(LocalPlayer():Name(),"attempted to set the text size outside of the set limits.")
+					print(LocalPlayer():Name(),"attempted to set the text size smaller then the set limits.")
+				end
+			elseif GetConVar("textscreen_size" .. i):GetInt() > TextMaxSize then
+				sliders[i]:SetValue(GetConVar("textscreen_size" .. TextMaxSize))
+				if PrintScreenAbuse == true then
+					print(LocalPlayer():Name(),"attempted to set the text size bigger then the set limits.")
 				end
 			end
 			labels[i]:SetFont(textscreenFonts[fontnum] .. fontsize[i])
