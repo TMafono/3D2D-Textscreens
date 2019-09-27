@@ -20,8 +20,9 @@ You can find the official verion here. https://github.com/Cherry/3D2D-Textscreen
 ## Server owners:
 * Use the textscreens_config.lua to change configuration options.
 
-[<img src="https://loading.ncba.gg/github/3d2dtextscreens/textscreens_config.PNG" alt="3D2D Textscreens" width="600px">]
+[<img src="https://loading.ncba.gg/github/3d2dtextscreens/config_one.PNG" alt="3D2D Textscreens cfg 1" width="600px">]
 
+[<img src="https://loading.ncba.gg/github/3d2dtextscreens/config_two.PNG" alt="3D2D Textscreens cfg 2" width="600px">]
 
 ### Custom admin permissions:
 This addon supports custom permissions via the use of a `TextscreensCanAdmin` hook. When this hook isn't present, or doesn't return anything, it defaults to an `IsSuperAdmin` check. If you want to override this behaviour for your own admin permissions, create a hook that exists both server *and* client side, similar to the following:
