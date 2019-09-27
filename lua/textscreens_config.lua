@@ -58,7 +58,6 @@ UsingMotherfuckingServerguard = false
 PriveledgedGroups = {
 	user,
 }
--- customCheck = function(ply) return table.HasValue({PriveledgedGroups}, ply:GetNWString("usergroup")) end,
 -- You set a group max textscreen limit here enjoy :)
 MaxTextScreenLimit = {
 	user = 1,
