@@ -9,7 +9,7 @@ You can find the official verion here. https://github.com/Cherry/3D2D-Textscreen
 
 ## Very Important Features: 
 * ULX(Anything that supports GetUserGroup) & Serverguard support.
-    * You can set how many textscreen each rank can spawn.
+    * You can set how many textscreens each rank can spawn.
     * Failsafe limit incase a rank wasn't configured or found.
 * Disable analytics through the config.[Enable/Disable]
 * Set a max character limit for a line on a textscreen.

@@ -14,7 +14,7 @@ UsePermaTextscreens = true
 -- Set the textscreen render distance here. Default: 1500
 TextscreenRDistance = 1500
 -- Max amount of characters that can be on a single line for a Textscreen. Default: 180
-MaxTextscreenCharacters = 45
+MaxTextscreenCharacters = 180
 -- Minimum textsize for textscreens. Default: 20 - I recommened 25 as minimum.
 TextMinSize = 20
 -- Maximum textsize for textscreens. Default: 100 - I recommened 80 as maximum.
