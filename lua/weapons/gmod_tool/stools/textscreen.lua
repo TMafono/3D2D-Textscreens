@@ -50,9 +50,14 @@ end
 function TOOL:LeftClick(tr)
 	if (tr.Entity:GetClass() == "player") then return false end
 	if (CLIENT) then return true end
-	local ply = self:GetOwner()
-	if not (self:GetWeapon():CheckLimit("textscreens")) then return false end
-	-- ensure at least 1 line of the textscreen has text before creating entity
+	local ply = self:GetOwner() or self:LocalPlayer()
+	if UsingMotherfuckingServerguard == true then
+		local textMax = MaxTextScreenLimit[serverguard.player:GetRank(ply)] or FailsafeMaxTextscreens
+		if table.Count(ents.FindByClass( "sammyservers_textscreen" )) >= textMax or table.Count(ents.FindByClass( "sammyservers_textscreen" )) >= TextscreensLimit then return false end
+		else
+		local textMax = MaxTextScreenLimit[self:GetOwner():GetUserGroup()] or FailsafeMaxTextscreens
+		if table.Count(ents.FindByClass( "sammyservers_textscreen" )) >= textMax or table.Count(ents.FindByClass( "sammyservers_textscreen" )) >= TextscreensLimit then return false end
+	end
 	local hasText = false
 	for i = 1, 5 do
 		local text = self:GetClientInfo("text" .. i) or ""

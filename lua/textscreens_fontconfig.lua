@@ -18,14 +18,14 @@ Custom fonts - requires server restart to take affect -- "Screens_" will be remo
 --]]
 
 -- Default textscreens font
-addFont("Coolvetica outlined", {
+addFont("Coolvetica outlined", { -- Font 1
 	font = "coolvetica",
 	weight = 400,
 	antialias = false,
 	outline = true
 })
 
-addFont("Coolvetica", {
+addFont("Coolvetica", { -- Font 2
 	font = "coolvetica",
 	weight = 400,
 	antialias = false,
@@ -33,14 +33,14 @@ addFont("Coolvetica", {
 })
 
 -- Trebuchet
-addFont("Screens_Trebuchet outlined", {
+addFont("Screens_Trebuchet outlined", { -- Font 3
 	font = "Trebuchet MS",
 	weight = 400,
 	antialias = false,
 	outline = true
 })
 
-addFont("Screens_Trebuchet", {
+addFont("Screens_Trebuchet", { -- Font 4
 	font = "Trebuchet MS",
 	weight = 400,
 	antialias = false,
@@ -48,14 +48,14 @@ addFont("Screens_Trebuchet", {
 })
 
 -- Arial
-addFont("Screens_Arial outlined", {
+addFont("Screens_Arial outlined", { -- Font 5
 	font = "Arial",
 	weight = 600,
 	antialias = false,
 	outline = true
 })
 
-addFont("Screens_Arial", {
+addFont("Screens_Arial", { -- Font 6
 	font = "Arial",
 	weight = 600,
 	antialias = false,
@@ -63,14 +63,14 @@ addFont("Screens_Arial", {
 })
 
 -- Roboto Bk
-addFont("Screens_Roboto outlined", {
+addFont("Screens_Roboto outlined", { -- Font 7
 	font = "Roboto Bk",
 	weight = 400,
 	antialias = false,
 	outline = true
 })
 
-addFont("Screens_Roboto", {
+addFont("Screens_Roboto", { -- Font 8
 	font = "Roboto Bk",
 	weight = 400,
 	antialias = false,
@@ -78,14 +78,14 @@ addFont("Screens_Roboto", {
 })
 
 -- Helvetica
-addFont("Screens_Helvetica outlined", {
+addFont("Screens_Helvetica outlined", { -- Font 9
 	font = "Helvetica",
 	weight = 400,
 	antialias = false,
 	outline = true
 })
 
-addFont("Screens_Helvetica", {
+addFont("Screens_Helvetica", { -- Font 10
 	font = "Helvetica",
 	weight = 400,
 	antialias = false,
@@ -93,14 +93,14 @@ addFont("Screens_Helvetica", {
 })
 
 -- akbar
-addFont("Screens_Akbar outlined", {
+addFont("Screens_Akbar outlined", { -- Font 11
 	font = "akbar",
 	weight = 400,
 	antialias = false,
 	outline = true
 })
 
-addFont("Screens_Akbar", {
+addFont("Screens_Akbar", { -- Font 12
 	font = "akbar",
 	weight = 400,
 	antialias = false,
@@ -108,14 +108,14 @@ addFont("Screens_Akbar", {
 })
 
 -- csd
-addFont("Screens_csd outlined", {
+addFont("Screens_csd outlined", { -- Font 13
 	font = "csd",
 	weight = 400,
 	antialias = false,
 	outline = true
 })
 
-addFont("Screens_csd", {
+addFont("Screens_csd", { -- Font 14
 	font = "csd",
 	weight = 400,
 	antialias = false,

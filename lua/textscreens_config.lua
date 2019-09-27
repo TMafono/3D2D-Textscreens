@@ -19,10 +19,8 @@ MaxTextscreenCharacters = 45
 TextMinSize = 20
 -- Maximum textsize for textscreens. Default: 100 - I recommened 80 as maximum.
 TextMaxSize = 100
--- Set the max amount of textscreens here. Default: 3
--- Not used yet
-TextscreensLimit = 3
-
+-- Set the max amount of textscreens here. Make sure this is higher than the MaxTextScreenLimit set below. Default: 3
+TextscreensLimit = 5
 			/* Player's Name Section */
 
 -- Set this to true or false to enable displaying players names under their textscreen. - I would personally enable this as it makes it easier for staff to locate textscreen owners.
@@ -51,6 +49,20 @@ AdvertisementTextSize = 50
 -- The Advertisement Font, Aka the font the advertisement uses.
 -- This needs to  be a number. View the textscreens_fontconfig file. They are numbered for you :)
 AdvertisementFont = 1
+
+			/* Permissions */
+-- Set to true if you are using serverguard set to false to use GetUserGroup.
+UsingMotherfuckingServerguard = false
 -- These are the groups that can manipulate Textscreens(Physgun/Remove).
 -- Not used yet.
-ServerguardGroups = {}
+PriveledgedGroups = {
+	user,
+}
+-- customCheck = function(ply) return table.HasValue({PriveledgedGroups}, ply:GetNWString("usergroup")) end,
+-- You set a group max textscreen limit here enjoy :)
+MaxTextScreenLimit = {
+	user = 1,
+	--superadmin = 1,
+}
+-- This is the fall back max textscreens incase the rank could be be found.
+FailsafeMaxTextscreens = 2
