@@ -31,12 +31,14 @@ if (CLIENT) then
 	}
 
 	language.Add("tool.textscreen.name", "3D2D Textscreen")
+	language.Add("#player.textscreen.name", "Player Name Customization")
+	language.Add("#player.textscreen.desc", "This is where you can customize your name displayed on your textscreen.")
 	language.Add("tool.textscreen.desc", "Create a textscreen with multiple lines, font colours and sizes.")
 	language.Add("tool.textscreen.left", "Spawn a textscreen.") -- Does not work with capital T in tool. Same with right and reload.
 	language.Add("tool.textscreen.right", "Update textscreen with settings.")
 	language.Add("tool.textscreen.reload", "Copy textscreen.")
-	language.Add("Undone.textscreens", "Undone textscreen")
-	language.Add("Undone_textscreens", "Undone textscreen")
+	language.Add("Undone.textscreens", "Removed textscreen")
+	language.Add("Undone_textscreens", "Removed textscreen")
 	language.Add("Cleanup.textscreens", "Textscreens")
 	language.Add("Cleanup_textscreens", "Textscreens")
 	language.Add("Cleaned.textscreens", "Cleaned up all 3D2D Textscreen.")
@@ -54,6 +56,12 @@ function TOOL:LeftClick(tr)
 	local hasText = false
 	for i = 1, 5 do
 		local text = self:GetClientInfo("text" .. i) or ""
+		if text ~= "" then
+			hasText = true
+		end
+	end
+	for i = 6, 7 do
+	local text = self:GetClientInfo("text" .. i) or ""
 		if text ~= "" then
 			hasText = true
 		end
@@ -88,9 +96,30 @@ function TOOL:LeftClick(tr)
 			tonumber(self:GetClientInfo("size" .. i)) or TextMinSize,
 			-- font
 			tonumber(self:GetClientInfo("font" .. i)) or 1
+
+			-- self:GetClientInfo("name" .. i) or LocalPlayer():Name()
+			--[[--]]
 		)
 	end
-
+	-- local name = LocalPlayer():Name()
+	if DisplayNames == true then
+		threedtwodtextScreen:SetLine(
+			6, -- Line
+			self:GetOwner():Name() or "Jane Doe", -- text - "Jane Doe"
+			PlayerNameColor or 255,
+			PlayerNameSize or TextMinSize,
+			-- font
+			1)
+		end
+	if EnableAdvertising == true then
+		threedtwodtextScreen:SetLine(
+			7, -- Line
+			Advertisement, -- text - "Jane Doe"
+			AdvertisementTextColor or 255,
+			AdvertisementTextSize or TextMinSize,
+			-- font
+			AdvertisementFont or 1)
+	end
 	return true
 end
 
@@ -113,9 +142,28 @@ function TOOL:RightClick(tr)
 				tonumber(self:GetClientInfo("size" .. i)) or TextMinSize,
 				-- font
 				tonumber(self:GetClientInfo("font" .. i)) or 1
+
+				-- self:GetClientInfo("name" .. i) or LocalPlayer():Name()
 			)
 		end
-
+		if DisplayNames == true then
+		threedtwodtextScreen:SetLine(
+			6, -- Line
+			self:GetOwner():Name() or "Jane Doe", -- text - "Jane Doe"
+			PlayerNameColor or 255,
+			PlayerNameSize or TextMinSize,
+			-- font
+			1)
+		end
+		if EnableAdvertising == true then
+			threedtwodtextScreen:SetLine(
+				7, -- Line
+				Advertisement, -- text - "Jane Doe"
+				AdvertisementTextColor or 255,
+				AdvertisementTextSize or TextMinSize,
+				-- font
+				AdvertisementFont or 1)
+		end
 		TraceEnt:Broadcast()
 
 		return true
@@ -145,10 +193,6 @@ local ConVarsDefault = TOOL:BuildConVarList()
 function TOOL.BuildCPanel(CPanel)
 	AddCSLuaFile("textscreens_fontconfig.lua")
 	include("textscreens_fontconfig.lua")
-	--[[local logo = vgui.Create("DImage", CPanel)
-	logo:SetSize(267, 134)
-	logo:SetImage("textscreens/logo.png")
-	CPanel:AddItem(logo)--]]
 
 	CPanel:AddControl("Header", {
 		Text = "#tool.textscreen.name",
@@ -170,9 +214,9 @@ function TOOL.BuildCPanel(CPanel)
 	end)
 
 	local function ResetFont(lines, text)
-		if #lines >= 5 then
+		if #lines >= 6 then
 			fontnum = 1
-			for i = 1, 5 do
+			for i = 1,6 do
 				RunConsoleCommand("textscreen_font" .. i, 1)
 			end
 		end
@@ -228,7 +272,7 @@ function TOOL.BuildCPanel(CPanel)
 				RunConsoleCommand("textscreen_b" .. i, 255)
 				RunConsoleCommand("textscreen_a" .. i, 255)
 				RunConsoleCommand("textscreen_size" .. i, TextMinSize)
-				sliders[i]:SetValue(20)
+				sliders[i]:SetValue(TextMinSize)
 				RunConsoleCommand("textscreen_text" .. i, "")
 				RunConsoleCommand("textscreen_font" .. i, 1)
 				textBox[i]:SetValue("")
@@ -255,7 +299,7 @@ function TOOL.BuildCPanel(CPanel)
 				RunConsoleCommand("textscreen_b" .. i, 255)
 				RunConsoleCommand("textscreen_a" .. i, 255)
 				RunConsoleCommand("textscreen_size" .. i, TextMinSize)
-				sliders[i]:SetValue(20)
+				sliders[i]:SetValue(TextMinSize)
 				RunConsoleCommand("textscreen_text" .. i, "")
 				textBox[i]:SetValue("")
 				fontsize[i] = 20
@@ -270,7 +314,7 @@ function TOOL.BuildCPanel(CPanel)
 				RunConsoleCommand("textscreen_b" .. i, 255)
 				RunConsoleCommand("textscreen_a" .. i, 255)
 				RunConsoleCommand("textscreen_size" .. i, TextMinSize)
-				sliders[i]:SetValue(20)
+				sliders[i]:SetValue(TextMinSize)
 				RunConsoleCommand("textscreen_text" .. i, "")
 				RunConsoleCommand("textscreen_font" .. i, 1)
 				textBox[i]:SetValue("")
@@ -296,7 +340,7 @@ function TOOL.BuildCPanel(CPanel)
 			local font = TrimFontName(i)
 			menu:AddOption(font, function()
 				fontnum = i
-				for o = 1, 5 do
+				for o = 1,5 do
 					RunConsoleCommand("textscreen_font" .. o, i)
 					labels[o]:SetFont(textscreenFonts[fontnum] .. fontsize[o])
 				end
@@ -347,11 +391,11 @@ function TOOL.BuildCPanel(CPanel)
 		sliders[i]:SetConVar("textscreen_size" .. i)
 		sliders[i].OnValueChanged = function(panel, value)
 			fontsize[i] = math.Round(tonumber(value))
-			--[[if fontsize[i] < TextMinSize then
-				fontsize[i] = TextMinSize
-			end--]]
 			if GetConVar("textscreen_size" .. i):GetInt() < TextMinSize or GetConVar("textscreen_size" .. i):GetInt() > TextMaxSize then
 				sliders[i]:SetValue(GetConVar("textscreen_size" .. TextMinSize))
+				if PrintScreenAbuse == true then
+					print(LocalPlayer():Name(),"attempted to set the text size outside of the set limits.")
+				end
 			end
 			labels[i]:SetFont(textscreenFonts[fontnum] .. fontsize[i])
 			labels[i]:SetHeight(fontsize[i])

@@ -129,10 +129,10 @@ if SERVER then
 	hook_Add("PostCleanupMap", "loadTextScreens", SpawnPermaTextscreens)
 
 	concommand.Add("SS_TextScreen", function(ply, cmd, args)
-		if not serverguard.player:GetRank(ply) == ServerguardGroups or not args or not args[1] or not args[2] or not (args[1] == "delete" or args[1] == "add") then
+		--[[if not serverguard.player:GetRank(ply) == ServerguardGroups or not args or not args[1] or not args[2] or not (args[1] == "delete" or args[1] == "add") then
 			ply:ChatPrint("not authorised, or bad arguments")
 			return
-		end
+		end--]]
 		local ent = Entity(args[2])
 		if not IsValid(ent) or ent:GetClass() ~= "sammyservers_textscreen" then return false end
 

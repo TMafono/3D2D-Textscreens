@@ -18,10 +18,11 @@ local TEXT = 2
 local POSX = 3
 local POSY = 4
 local COL = 5
-local LEN = 6
+local LEN = 8
+local hook_Add = hook.Add
 
 -- Make ply:ShouldDrawLocalPlayer() never get called more than once a frame
-hook.Add("Think", "ss_should_draw_both_sides", function()
+hook_Add("Think", "ss_should_draw_both_sides", function()
 	shouldDrawBoth = LocalPlayer():ShouldDrawLocalPlayer()
 end)
 
@@ -68,6 +69,10 @@ local function Draw3D2D(ang, pos, camangle, data)
 			surface.SetTextColor(data[i][COL])
 			-- Text
 			surface.DrawText(data[i][TEXT])
+			-- Players Name
+			--[[if DisplayNames == true then
+				surface.DrawText( data[i], LocalPlayer():Name(), "TargetID", Color( 255, 255, 255, 255 ))
+			end--]]
 		end
 
 		render.PopFilterMin()

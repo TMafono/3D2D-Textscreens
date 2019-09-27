@@ -1,9 +1,8 @@
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
-resource.AddFile("materials/textscreens/logo.png")
-
 include("shared.lua")
-
+include("textscreens_config.lua")
+local hook_Add = hook.Add
 
 function ENT:Initialize()
 	self:SetRenderMode(RENDERMODE_TRANSALPHA)
@@ -32,7 +31,7 @@ local function textScreenPickup(ply, ent)
 		ent.heldby = ent.heldby + 1
 	end
 end
-hook.Add("PhysgunPickup", "textScreensPreventTravelPickup", textScreenPickup)
+hook_Add("PhysgunPickup", "textScreensPreventTravelPickup", textScreenPickup)
 
 local function textScreenDrop(ply, ent)
 	if IsValid(ent) and ent:GetClass() == "sammyservers_textscreen" then
@@ -43,7 +42,7 @@ local function textScreenDrop(ply, ent)
 		end
 	end
 end
-hook.Add("PhysgunDrop", "textScreensPreventTravelDrop", textScreenDrop)
+hook_Add("PhysgunDrop", "textScreensPreventTravelDrop", textScreenDrop)
 
 local function textScreenCanTool(ply, trace, tool)
 	-- only allow textscreen and remover tool
@@ -51,7 +50,7 @@ local function textScreenCanTool(ply, trace, tool)
 		return false
 	end
 end
-hook.Add("CanTool", "textScreensPreventTools", textScreenCanTool)
+hook_Add("CanTool", "textScreensPreventTools", textScreenCanTool)
 
 util.AddNetworkString("textscreens_update")
 util.AddNetworkString("textscreens_download")
@@ -61,8 +60,8 @@ function ENT:SetLine(line, text, color, size, font)
 	if string.sub(text, 1, 1) == "#" then
 		text = string.sub(text, 2)
 	end
-	if string.len(text) > 180 then
-		text = string.sub(text, 1, 180) .. "..."
+	if string.len(text) > MaxTextscreenCharacters then
+		text = string.sub(text, 1, MaxTextscreenCharacters) .. "..."
 	end
 
 	size = math.Clamp(size, 1, 100)
