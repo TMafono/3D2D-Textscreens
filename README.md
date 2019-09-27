@@ -4,7 +4,7 @@ You can find the official verion here. https://github.com/Cherry/3D2D-Textscreen
 ## Special Thanks: 
 * To TMafono.xyz#6666 for fixing the Textscreen restriction per usergroup.
 * To TMafono.xyz#6666 again for showing me how loops work and giving me an example to go off of.
-* To you guessed it, TMafono.xyz#6666 again for sticking through with me when I had literally no sleep.
+* You guessed it, TMafono.xyz#6666 again for sticking through with me when I had literally no sleep.
 * Special thanks to the community for giving me the inspiration to continue this project.
 
 ## Very Important Features: 
