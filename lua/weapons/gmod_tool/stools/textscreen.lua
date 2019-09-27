@@ -9,7 +9,7 @@ local sliders = {}
 
 for i = 1, 5 do
 	TOOL.ClientConVar["text" .. i] = ""
-	TOOL.ClientConVar["size" .. i] = 20
+	TOOL.ClientConVar["size" .. i] = TextMinSize
 	TOOL.ClientConVar["r" .. i] = 255
 	TOOL.ClientConVar["g" .. i] = 255
 	TOOL.ClientConVar["b" .. i] = 255
@@ -85,7 +85,7 @@ function TOOL:LeftClick(tr)
 				tonumber(self:GetClientInfo("b" .. i)) or 255,
 				tonumber(self:GetClientInfo("a" .. i)) or 255
 			),
-			tonumber(self:GetClientInfo("size" .. i)) or 20,
+			tonumber(self:GetClientInfo("size" .. i)) or TextMinSize,
 			-- font
 			tonumber(self:GetClientInfo("font" .. i)) or 1
 		)
@@ -110,7 +110,7 @@ function TOOL:RightClick(tr)
 					tonumber(self:GetClientInfo("b" .. i)) or 255,
 					tonumber(self:GetClientInfo("a" .. i)) or 255
 				),
-				tonumber(self:GetClientInfo("size" .. i)) or 20,
+				tonumber(self:GetClientInfo("size" .. i)) or TextMinSize,
 				-- font
 				tonumber(self:GetClientInfo("font" .. i)) or 1
 			)
@@ -204,8 +204,8 @@ function TOOL.BuildCPanel(CPanel)
 		menu:AddOption("Reset sizes", function()
 			for i = 1, 5 do
 				RunConsoleCommand("textscreen_size" .. i, 20)
-				fontsize[i] = 20
-				sliders[i]:SetValue(20)
+				fontsize[i] = TextMinSize
+				sliders[i]:SetValue(TextMinSize)
 				labels[i]:SetFont(textscreenFonts[fontnum] .. fontsize[i])
 			end
 		end)
@@ -227,12 +227,12 @@ function TOOL.BuildCPanel(CPanel)
 				RunConsoleCommand("textscreen_g" .. i, 255)
 				RunConsoleCommand("textscreen_b" .. i, 255)
 				RunConsoleCommand("textscreen_a" .. i, 255)
-				RunConsoleCommand("textscreen_size" .. i, 20)
+				RunConsoleCommand("textscreen_size" .. i, TextMinSize)
 				sliders[i]:SetValue(20)
 				RunConsoleCommand("textscreen_text" .. i, "")
 				RunConsoleCommand("textscreen_font" .. i, 1)
 				textBox[i]:SetValue("")
-				fontsize[i] = 20
+				fontsize[i] = TextMinSize
 			end
 			ResetFont({1, 2, 3, 4, 5}, true)
 		end)
@@ -254,7 +254,7 @@ function TOOL.BuildCPanel(CPanel)
 				RunConsoleCommand("textscreen_g" .. i, 255)
 				RunConsoleCommand("textscreen_b" .. i, 255)
 				RunConsoleCommand("textscreen_a" .. i, 255)
-				RunConsoleCommand("textscreen_size" .. i, 20)
+				RunConsoleCommand("textscreen_size" .. i, TextMinSize)
 				sliders[i]:SetValue(20)
 				RunConsoleCommand("textscreen_text" .. i, "")
 				textBox[i]:SetValue("")
@@ -269,12 +269,12 @@ function TOOL.BuildCPanel(CPanel)
 				RunConsoleCommand("textscreen_g" .. i, 255)
 				RunConsoleCommand("textscreen_b" .. i, 255)
 				RunConsoleCommand("textscreen_a" .. i, 255)
-				RunConsoleCommand("textscreen_size" .. i, 20)
+				RunConsoleCommand("textscreen_size" .. i, TextMinSize)
 				sliders[i]:SetValue(20)
 				RunConsoleCommand("textscreen_text" .. i, "")
 				RunConsoleCommand("textscreen_font" .. i, 1)
 				textBox[i]:SetValue("")
-				fontsize[i] = 20
+				fontsize[i] = TextMinSize
 			end
 			ResetFont({1, 2, 3, 4, 5}, true)
 		end)
@@ -319,7 +319,7 @@ function TOOL.BuildCPanel(CPanel)
 	})
 
 	for i = 1, 5 do
-		fontsize[i] = 20
+		fontsize[i] = TextMinSize
 
 		lineLabels[i] = CPanel:AddControl("Label", {
 			Text = "Line " .. i,
@@ -341,13 +341,18 @@ function TOOL.BuildCPanel(CPanel)
 
 		sliders[i] = vgui.Create("DNumSlider")
 		sliders[i]:SetText("Font size")
-		sliders[i]:SetMinMax(20, 100)
+		sliders[i]:SetMinMax(TextMinSize, TextMaxSize)
 		sliders[i]:SetDecimals(0)
 		sliders[i]:SetValue(GetConVar("textscreen_size" .. i))
 		sliders[i]:SetConVar("textscreen_size" .. i)
-
 		sliders[i].OnValueChanged = function(panel, value)
 			fontsize[i] = math.Round(tonumber(value))
+			--[[if fontsize[i] < TextMinSize then
+				fontsize[i] = TextMinSize
+			end--]]
+			if GetConVar("textscreen_size" .. i):GetInt() < TextMinSize or GetConVar("textscreen_size" .. i):GetInt() > TextMaxSize then
+				sliders[i]:SetValue(GetConVar("textscreen_size" .. TextMinSize))
+			end
 			labels[i]:SetFont(textscreenFonts[fontnum] .. fontsize[i])
 			labels[i]:SetHeight(fontsize[i])
 		end

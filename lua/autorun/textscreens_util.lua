@@ -61,7 +61,7 @@ if SERVER then
 	end)
 	timer.Create( "RemoveCallToHomeSSHook", 30, 1, function()
 	hook_Remove("Initialize", "CallToHomeSS")
-		debugprint("Succefully removed Call To Home Hook(Analytics)")
+		print("Succefully removed Call To Home Hook(Analytics)")
 	end)
 
 	local function StringRandom(int)
