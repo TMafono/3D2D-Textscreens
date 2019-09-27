@@ -399,7 +399,10 @@ function TOOL.BuildCPanel(CPanel)
 			if GetConVar("textscreen_size" .. i):GetInt() < TextMinSize then
 				sliders[i]:SetValue(GetConVar("textscreen_size" .. TextMinSize))
 				if PrintScreenAbuse == true then
-					print(LocalPlayer():Name(),"attempted to set the text size outside of the set limits.")
+<<<<<<< HEAD
+					print(LocalPlayer():Name(),"attempted to set the text size smaller then the set limits.")
+=======
+>>>>>>> c3959c4c1c56236ddad86d9335a8e3b290b8a887
 					print(LocalPlayer():Name(),"attempted to set the text size smaller then the set limits.")
 				end
 			elseif GetConVar("textscreen_size" .. i):GetInt() > TextMaxSize then
