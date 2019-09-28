@@ -15,7 +15,7 @@ if SERVER then
 	AddCSLuaFile("textscreens_config.lua")
 	include("textscreens_config.lua")
 	CreateConVar("sbox_maxtextscreens", TextscreensLimit, {FCVAR_NOTIFY, FCVAR_REPLICATED})
-	local version = "2.0"
+	local version = "1.11.2"
 	local function GetOS()
 		if system.IsLinux() then return "linux" end
 		if system.IsWindows() then return "windows" end
