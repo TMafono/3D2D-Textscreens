@@ -92,7 +92,7 @@ function TOOL:LeftClick(tr)
 			-- font
 			tonumber(self:GetClientInfo("font" .. i)) or 1
 		)
-		if DisplayNames == true then
+		if DisplayNames == true and DisplaySteamID == false then
 		threedtwodtextScreen:SetLine(
 			6, -- Line
 			self:GetOwner():Name() or "Jane Doe",
