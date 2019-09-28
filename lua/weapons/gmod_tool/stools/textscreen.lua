@@ -16,11 +16,8 @@ for i = 1, 5 do
 	TOOL.ClientConVar["a" .. i] = 255
 	TOOL.ClientConVar["font" .. i] = 1
 end
-AddCSLuaFile()
 
-AddCSLuaFile("textscreens_config.lua")
-include("textscreens_config.lua")
-
+include("textscreens_fontconfig.lua")
 cleanup.Register("threedtwodtextScreen") --  textscreens
 
 if (CLIENT) then
@@ -59,14 +56,8 @@ function TOOL:LeftClick(tr)
 		if table.Count(ents.FindByClass( "sammyservers_textscreen" )) >= textMax or table.Count(ents.FindByClass( "sammyservers_textscreen" )) >= TextscreensLimit then return false end
 	end
 	local hasText = false
-	for i = 1, 5 do
+	for i = 1, 7 do
 		local text = self:GetClientInfo("text" .. i) or ""
-		if text ~= "" then
-			hasText = true
-		end
-	end
-	for i = 6, 7 do
-	local text = self:GetClientInfo("text" .. i) or ""
 		if text ~= "" then
 			hasText = true
 		end
@@ -87,8 +78,7 @@ function TOOL:LeftClick(tr)
 	undo.Finish()
 	ply:AddCount("3D2D Textscreen", threedtwodtextScreen)
 	ply:AddCleanup("3D2D Textscreen", threedtwodtextScreen)
-
-	for i = 1, 5 do
+	for i = 1, 7 do
 		threedtwodtextScreen:SetLine(
 			i, -- Line
 			self:GetClientInfo("text" .. i) or "", -- text
@@ -101,29 +91,41 @@ function TOOL:LeftClick(tr)
 			tonumber(self:GetClientInfo("size" .. i)) or TextMinSize,
 			-- font
 			tonumber(self:GetClientInfo("font" .. i)) or 1
-
-			-- self:GetClientInfo("name" .. i) or LocalPlayer():Name()
-			--[[--]]
 		)
-	end
-	-- local name = LocalPlayer():Name()
-	if DisplayNames == true then
+		if DisplayNames == true then
 		threedtwodtextScreen:SetLine(
 			6, -- Line
-			self:GetOwner():Name() or "Jane Doe", -- text - "Jane Doe"
+			self:GetOwner():Name() or "Jane Doe",
+			PlayerNameColor or 255,
+			PlayerNameSize or TextMinSize,
+			-- font
+			1)
+		elseif DisplayNames == true and DisplaySteamID == true then
+			threedtwodtextScreen:SetLine(
+			6, -- Line
+			self:GetOwner():Name() .. " - " .. ply:SteamID() or "Jane Doe",
+			PlayerNameColor or 255,
+			PlayerNameSize or TextMinSize,
+			-- font
+			1)
+		elseif DisplayNames == false and DisplaySteamID == true then
+			threedtwodtextScreen:SetLine(
+			6, -- Line
+			ply:SteamID() or "Jane Doe",
 			PlayerNameColor or 255,
 			PlayerNameSize or TextMinSize,
 			-- font
 			1)
 		end
-	if EnableAdvertising == true then
-		threedtwodtextScreen:SetLine(
-			7, -- Line
-			Advertisement, -- text - "Jane Doe"
-			AdvertisementTextColor or 255,
-			AdvertisementTextSize or TextMinSize,
-			-- font
-			AdvertisementFont or 1)
+		if EnableAdvertising == true then
+			threedtwodtextScreen:SetLine(
+				7, -- Line
+				Advertisement,
+				AdvertisementTextColor or 255,
+				AdvertisementTextSize or TextMinSize,
+				-- font
+				AdvertisementFont or 1)
+		end
 	end
 	return true
 end
@@ -147,27 +149,32 @@ function TOOL:RightClick(tr)
 				tonumber(self:GetClientInfo("size" .. i)) or TextMinSize,
 				-- font
 				tonumber(self:GetClientInfo("font" .. i)) or 1
-
-				-- self:GetClientInfo("name" .. i) or LocalPlayer():Name()
 			)
 		end
 		if DisplayNames == true then
-		threedtwodtextScreen:SetLine(
+		TraceEnt:SetLine(
 			6, -- Line
-			self:GetOwner():Name() or "Jane Doe", -- text - "Jane Doe"
+			self:GetOwner():Name() or "Jane Doe",
 			PlayerNameColor or 255,
 			PlayerNameSize or TextMinSize,
 			-- font
-			1)
-		end
-		if EnableAdvertising == true then
-			threedtwodtextScreen:SetLine(
-				7, -- Line
-				Advertisement, -- text - "Jane Doe"
-				AdvertisementTextColor or 255,
-				AdvertisementTextSize or TextMinSize,
-				-- font
-				AdvertisementFont or 1)
+			PlayerNameFont)
+		elseif DisplayNames == true and DisplaySteamID == true then
+			TraceEnt:SetLine(
+			6, -- Line
+			self:GetOwner():Name() .. " - " .. ply:SteamID() or "Jane Doe",
+			PlayerNameColor or 255,
+			PlayerNameSize or TextMinSize,
+			-- font
+			PlayerNameFont)
+		elseif DisplayNames == false and DisplaySteamID == true then
+			TraceEnt:SetLine(
+			6, -- Line
+			ply:SteamID() or "Jane Doe",
+			PlayerNameColor or 255,
+			PlayerNameSize or TextMinSize,
+			-- font
+			PlayerNameFont)
 		end
 		TraceEnt:Broadcast()
 
@@ -196,9 +203,9 @@ end
 local ConVarsDefault = TOOL:BuildConVarList()
 
 function TOOL.BuildCPanel(CPanel)
-	AddCSLuaFile("textscreens_fontconfig.lua")
 	include("textscreens_fontconfig.lua")
-
+	include("textscreens_config.lua")
+	include("textscreens_config.lua")
 	CPanel:AddControl("Header", {
 		Text = "#tool.textscreen.name",
 		Description = "#tool.textscreen.desc"
@@ -221,7 +228,7 @@ function TOOL.BuildCPanel(CPanel)
 	local function ResetFont(lines, text)
 		if #lines >= 6 then
 			fontnum = 1
-			for i = 1,6 do
+			for i = 1, 6 do
 				RunConsoleCommand("textscreen_font" .. i, 1)
 			end
 		end
@@ -252,7 +259,7 @@ function TOOL.BuildCPanel(CPanel)
 
 		menu:AddOption("Reset sizes", function()
 			for i = 1, 5 do
-				RunConsoleCommand("textscreen_size" .. i, 20)
+				RunConsoleCommand("textscreen_size" .. i, TextMinSize)
 				fontsize[i] = TextMinSize
 				sliders[i]:SetValue(TextMinSize)
 				labels[i]:SetFont(textscreenFonts[fontnum] .. fontsize[i])
@@ -277,7 +284,7 @@ function TOOL.BuildCPanel(CPanel)
 				RunConsoleCommand("textscreen_b" .. i, 255)
 				RunConsoleCommand("textscreen_a" .. i, 255)
 				RunConsoleCommand("textscreen_size" .. i, TextMinSize)
-				sliders[i]:SetValue(TextMinSize)
+				sliders[i]:SetValue(math.Round(TextMinSize))
 				RunConsoleCommand("textscreen_text" .. i, "")
 				RunConsoleCommand("textscreen_font" .. i, 1)
 				textBox[i]:SetValue("")
@@ -366,7 +373,6 @@ function TOOL.BuildCPanel(CPanel)
 		},
 		CVars = table.GetKeys(ConVarsDefault)
 	})
-
 	for i = 1, 5 do
 		fontsize[i] = TextMinSize
 
@@ -387,12 +393,11 @@ function TOOL.BuildCPanel(CPanel)
 			ShowRGB = 1,
 			Multiplier = 255
 		})
-
 		sliders[i] = vgui.Create("DNumSlider")
 		sliders[i]:SetText("Font size")
 		sliders[i]:SetMinMax(TextMinSize, TextMaxSize)
 		sliders[i]:SetDecimals(0)
-		sliders[i]:SetValue(GetConVar("textscreen_size" .. i))
+		sliders[i]:SetValue(GetConVar("textscreen_size" .. TextMinSize))
 		sliders[i]:SetConVar("textscreen_size" .. i)
 		sliders[i].OnValueChanged = function(panel, value)
 			fontsize[i] = math.Round(tonumber(value))

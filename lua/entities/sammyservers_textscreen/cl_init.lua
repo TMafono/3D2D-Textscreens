@@ -1,13 +1,10 @@
 include("shared.lua")
-include("textscreens_fontconfig.lua")
 include("textscreens_config.lua")
-
--- local render_convar_range = TextscreenRDistance -- CreateClientConVar("ss_render_range", 1500, true, false, "Determines the render range for Textscreens. Default 1500")
+--include("textscreens_fontconfig.lua")
 local render_range = TextscreenRDistance --We multiply this is that we can use DistToSqr instead of Distance so we don't need to workout the square root all the time
 local textscreenFonts = textscreenFonts
 local screenInfo = {}
 local shouldDrawBoth = false
-
 -- Numbers used in conjunction with text width to work out the render bounds
 local widthBoundsDivider = 7.9
 local heightBoundsDivider = 12.4
@@ -22,9 +19,11 @@ local LEN = 8
 local hook_Add = hook.Add
 
 -- Make ply:ShouldDrawLocalPlayer() never get called more than once a frame
+if ShouldDrawBothSides == true then
 hook_Add("Think", "ss_should_draw_both_sides", function()
 	shouldDrawBoth = LocalPlayer():ShouldDrawLocalPlayer()
 end)
+end
 
 local function ValidFont(f)
 	if textscreenFonts[f] ~= nil then
@@ -56,8 +55,7 @@ end
 -- Draws the 3D2D text with the given positions, angles and data(text/font/col)
 local function Draw3D2D(ang, pos, camangle, data)
 	cam.Start3D2D(pos, camangle, .25)
-		render.PushFilterMin(TEXFILTER.ANISOTROPIC)
-
+		render.PushFilterMin(TEXFILTER.NONE)
 		-- Loop through each line
 		for i = 1, data[LEN] do
 			if not data[i] or not data[i][TEXT] then continue end
@@ -69,12 +67,8 @@ local function Draw3D2D(ang, pos, camangle, data)
 			surface.SetTextColor(data[i][COL])
 			-- Text
 			surface.DrawText(data[i][TEXT])
-			-- Players Name
-			--[[if DisplayNames == true then
-				surface.DrawText( data[i], LocalPlayer():Name(), "TargetID", Color( 255, 255, 255, 255 ))
-			end--]]
-		end
 
+		end
 		render.PopFilterMin()
 	cam.End3D2D()
 end
@@ -91,7 +85,7 @@ function ENT:DrawTranslucent()
 		data = screenInfo[self]
 
 		-- Should we draw both screens? (Third person/calview drawing fix)
-		if shouldDrawBoth then
+		if shouldDrawBoth and ShouldDrawBothSides == true then
 			Draw3D2D(ang, pos, camangle, data)
 			camangle:RotateAroundAxis(camangle:Right(), 180)
 			Draw3D2D(ang, pos, camangle, data)
@@ -110,7 +104,6 @@ function ENT:DrawTranslucent()
 		end
 	end
 end
-
 local function AddDrawingInfo(ent, rawData)
 	local drawData = {}
 	local textSize = {}
@@ -138,7 +131,6 @@ local function AddDrawingInfo(ent, rawData)
 		-- Colour
 		drawData[i][COL] = Color(rawData[i].color.r, rawData[i].color.g, rawData[i].color.b, 255)
 	end
-
 	-- Sort out heights
 	for i = 1, #rawData do
 		if not rawData[i] then continue end
@@ -149,7 +141,6 @@ local function AddDrawingInfo(ent, rawData)
 		-- Highest line to lowest, so that everything is central
 		currentHeight = currentHeight + textSize[i][2]
 	end
-
 	-- Cache the number of lines/length
 	drawData[LEN] = #drawData
 	-- Add the new data to our text screen list
@@ -179,7 +170,7 @@ end)
 -- Auto refresh
 if IsValid(LocalPlayer()) then
 	local screens = ents.FindByClass("sammyservers_textscreen")
-	for k, v in ipairs(screens) do
+	for k, v in pairs(screens) do
 		if screenInfo[v] == nil and v.lines ~= nil then
 			AddDrawingInfo(v, v.lines)
 		end

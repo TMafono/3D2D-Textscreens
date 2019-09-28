@@ -1,14 +1,8 @@
---[[local function checkAdmin(ply)
-	local canAdmin = hook.Run("TextscreensCanAdmin", ply) -- run custom hook function to check admin
-	if canAdmin == nil then -- if hook hasn't returned anything, default to super admin check
-		canAdmin = ply:IsSuperAdmin()
-	end
-	return canAdmin
-end--]]
+AddCSLuaFile("textscreens_fontconfig.lua")
 -- Localization
 local hook_Add = hook.Add
 local hook_Remove = hook.Remove
-local debugprint = print
+
 if AllowDebug == true then
 		debugprint = print
 		debugprint("AllowDebug is set to true so 3D2D Textscreen debug messages will be printed in console.")
@@ -16,13 +10,10 @@ if AllowDebug == true then
 		debugprint = nil
 	print("AllowDebug is set to false so 3D2D Textscreen debug messages will not be printed.")
 end
--- Server Shit
+
 if SERVER then
-	AddCSLuaFile()
 	AddCSLuaFile("textscreens_config.lua")
-	AddCSLuaFile("textscreens_fontconfig.lua")
 	include("textscreens_config.lua")
-	include("textscreens_fontconfig.lua")
 	CreateConVar("sbox_maxtextscreens", TextscreensLimit, {FCVAR_NOTIFY, FCVAR_REPLICATED})
 	local version = "2.0"
 	local function GetOS()
@@ -31,10 +22,8 @@ if SERVER then
 		if system.IsOSX() then return "osx" end
 		return "unknown"
 	end
-
 	local function submitAnalytics()
-		--if GetConVar("ss_call_to_home"):GetInt() ~= 1 or submitted then return end
-		if AllowAnalytics == true then -- && submitted == false
+		if AllowAnalytics == true then
 		-- Debug
 		debugprint("Allow Analytics Passed")
 		submitted = true
@@ -74,61 +63,57 @@ if SERVER then
 
 		return s
 	end
-
-	local textscreens = {}
-
-	local function SpawnPermaTextscreens()
-		if UsePermaTextscreens == true then
-		print("[3D2D Textscreens] Spawning textscreens...")
-		textscreens = file.Read("sammyservers_textscreens.txt", "DATA")
-		if not textscreens or textscreens == "" then
-			textscreens = {}
-			print("[3D2D Textscreens] Spawned 0 textscreens for map " .. game.GetMap())
-			return
-		end
-		textscreens = util.JSONToTable(textscreens)
-
-		local existingTextscreens = {}
-		for k,v in pairs(ents.FindByClass("sammyservers_textscreen")) do
-			if not v.uniqueName then continue end
-			existingTextscreens[v.uniqueName] = true
-		end
-
-		local count = 0
-		for k, v in pairs(textscreens) do
-			if v.MapName ~= game.GetMap() then continue end
-			if existingTextscreens[v.uniqueName] then continue end
-
-			local textScreen = ents.Create("sammyservers_textscreen")
-			textScreen:SetPos(Vector(v.posx, v.posy, v.posz))
-			textScreen:SetAngles(Angle(v.angp, v.angy, v.angr))
-			textScreen.uniqueName = v.uniqueName
-			textScreen:Spawn()
-			textScreen:Activate()
-			textScreen:SetMoveType(MOVETYPE_NONE)
-
-			for lineNum, lineData in pairs(v.lines or {}) do
-				textScreen:SetLine(lineNum, lineData.text, Color(lineData.color.r, lineData.color.g, lineData.color.b, lineData.color.a), lineData.size, lineData.font)
+	local threedtwodtextScreen = {}
+		local function SpawnPermaTextscreens()
+			if CLIENT then return end
+			if UsePermaTextscreens == true then
+			localthreedtwodtextScreen = file.Read("sammyservers_textscreens.txt", "DATA")
+			if not threedtwodtextScreen or threedtwodtextScreen == "" then
+				localthreedtwodtextScreen = {}
+				print("[3D2D Textscreens] Spawned 0 textscreens for map " .. game.GetMap())
+				return
 			end
+			localthreedtwodtextScreen = util.JSONToTable(localthreedtwodtextScreen)
+			local existingTextscreens = {}
+			for k,v in pairs(ents.FindByClass("sammyservers_textscreen")) do
+				if not v.uniqueName then continue end
+				existingTextscreens[v.uniqueName] = true
+			end
+			local count = 0
+			for k, v in pairs(localthreedtwodtextScreen) do
+				if v.MapName ~= game.GetMap() then continue end
+				if existingTextscreens[v.uniqueName] then continue end
 
-			textScreen:SetIsPersisted(true)
-			count = count + 1
-		end
+				local textScreen = ents.Create("sammyservers_textscreen")
+				textScreen:SetPos(Vector(v.posx, v.posy, v.posz))
+				textScreen:SetAngles(Angle(v.angp, v.angy, v.angr))
+				textScreen.uniqueName = v.uniqueName
+				textScreen:Spawn()
+				textScreen:Activate()
+				textScreen:SetMoveType(MOVETYPE_NONE)
+				textScreen:SetOwner(Owner)
+				for lineNum, lineData in pairs(v.lines or {}) do
+					textScreen:SetLine(lineNum, lineData.text, Color(lineData.color.r, lineData.color.g, lineData.color.b, lineData.color.a), lineData.size, lineData.font)
+				end
 
-		print("[3D2D Textscreens] Spawned " .. count .. " textscreens for map " .. game.GetMap())
-		else
-			debugprint("UsePermaTextscreens is set to false so permanent textscreens will not be spawned.")
+				textScreen:SetIsPersisted(true)
+				count = count + 1
+			end
+			print("[3D2D Textscreens] Spawned " .. count .. " textscreens for map " .. game.GetMap())
 		end
 	end
-
-	hook_Add("InitPostEntity", "loadTextScreens", function()
+	hook.Add("InitPostEntity", "loadTextScreens", function()
 		timer.Simple(10, SpawnPermaTextscreens)
+		print("InitPostEntity - Load TextScreens ")
 	end)
-	hook_Remove("InitPostEntity", "loadTextScreens")
-	-- debugprint("Load textscreens hook succefull removed.")
+	local function loadTextScreensHook()
+		hook_Remove("InitPostEntity", "loadTextScreens")
+	end
+	timer.Simple(180, loadTextScreensHook, print("Load textscreens hook successfull removed."))
 	hook_Add("PostCleanupMap", "loadTextScreens", SpawnPermaTextscreens)
 
 	concommand.Add("SS_TextScreen", function(ply, cmd, args)
+		if CLIENT then return end
 		local canperma = PriveledgedGroups[ply:GetUserGroup() or serverguard.player:GetRank(ply)]
 		if not canperma or not args or not args[1] or not args[2] or not (args[1] == "delete" or args[1] == "add") then
 			ply:ChatPrint("not authorised, or bad arguments")
@@ -151,20 +136,20 @@ if SERVER then
 			toAdd.uniqueName = StringRandom(10)
 			toAdd.MapName = game.GetMap()
 			toAdd.lines = ent.lines
-			table.insert(textscreens, toAdd)
-			file.Write("sammyservers_textscreens.txt", util.TableToJSON(textscreens))
+			table.insert(threedtwodtextScreen, toAdd)
+			file.Write("sammyservers_textscreens.txt", util.TableToJSON(threedtwodtextScreen))
 			ent:SetIsPersisted(true)
 
 			return ply:ChatPrint("Textscreen made permanent and saved.")
 		else
-			for k, v in pairs(textscreens) do
+			for k, v in pairs(threedtwodtextScreen) do
 				if v.uniqueName == ent.uniqueName then
-					textscreens[k] = nil
+					threedtwodtextScreen[k] = nil
 				end
 			end
 
 			ent:Remove()
-			file.Write("sammyservers_textscreens.txt", util.TableToJSON(textscreens))
+			file.Write("sammyservers_textscreens.txt", util.TableToJSON(threedtwodtextScreen))
 
 			return ply:ChatPrint("Textscreen removed and is no longer permanent.")
 		end

@@ -127,7 +127,7 @@ if CLIENT then
 	local function addFonts(path)
 		local files, folders = file.Find("resource/fonts/" .. path .. "*", "MOD")
 
-		for k, v in ipairs(files) do
+		for k, v in pairs(files) do
 			if string.GetExtensionFromFilename(v) == "ttf" then
 				local font = string.StripExtension(v)
 				if table.HasValue(textscreenFonts, "Screens_" .. font) then continue end
@@ -142,7 +142,7 @@ addFont("Screens_ ]] .. font .. [[", {
 			end
 		end
 
-		for k, v in ipairs(folders) do
+		for k, v in pairs(folders) do
 			addFonts(path .. v .. "/")
 		end
 	end
