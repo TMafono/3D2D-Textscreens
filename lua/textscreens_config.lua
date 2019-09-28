@@ -39,7 +39,7 @@ PlayerNameColor = Color(255,255,255)
 AdaptiveCharacterLimit = true
 -- This is the table used to set the character depending on th font size font size. Row One: FontSize, Row Two: Character limit.
 AdaptiveCharactersTable = {
-	40 = 180,
+	40 == 180
 }
 			/* Advertisements */
 
