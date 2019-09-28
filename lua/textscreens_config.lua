@@ -25,6 +25,8 @@ TextscreensLimit = 5
 
 -- Set this to true or false to enable displaying players names under their textscreen. - I would personally enable this as it makes it easier for staff to locate textscreen owners.
 DisplayNames = true
+-- This will display the player's SteamID next to their name. Textscreen are cached so their name doesn't update on the textscreen if it changes. 
+DisplaySteamID = true
 -- Set this to true to enable. This will print in console when someone attempts to set the textscreen Min/Max size below or above their set vaues.
 PrintScreenAbuse = false
 -- This sets the player name size that is displayed under the textscreen. 
@@ -33,7 +35,12 @@ PrintScreenAbuse = false
 PlayerNameSize = 50
 -- This is the color of the players name.
 PlayerNameColor = Color(255,255,255)
-
+-- Setting this to true enable the max amount of characters to dynamically change depending on the players font size.
+AdaptiveCharacterLimit = true
+-- This is the table used to set the character depending on th font size font size. Row One: FontSize, Row Two: Character limit.
+AdaptiveCharactersTable = {
+	40 = 180,
+}
 			/* Advertisements */
 
 -- WHAT?!?! You can have it where every player advertises for you?
@@ -56,12 +63,11 @@ UsingMotherfuckingServerguard = false
 -- These are the groups that can manipulate Textscreens(Physgun/Remove).
 -- Not used yet.
 PriveledgedGroups = {
-	user,
+	superadmin = true,
 }
 -- You set a group max textscreen limit here enjoy :)
 MaxTextScreenLimit = {
-	user = 1,
-	--superadmin = 1,
+	superadmin = 1,
 }
 -- This is the fall back max textscreens incase the rank couldn't be found.
 FailsafeMaxTextscreens = 2

@@ -21,7 +21,7 @@ AddCSLuaFile()
 AddCSLuaFile("textscreens_config.lua")
 include("textscreens_config.lua")
 
-cleanup.Register("3D2D Textscreen") --  textscreens
+cleanup.Register("threedtwodtextScreen") --  textscreens
 
 if (CLIENT) then
 	TOOL.Information = {
