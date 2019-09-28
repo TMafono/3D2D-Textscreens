@@ -77,10 +77,8 @@ AdvertisementFont = 1
 -- Set to true if you are using serverguard set to false to use GetUserGroup.
 UsingMotherfuckingServerguard = false
 -- These are the groups that can manipulate Textscreens(Physgun/Remove).
--- Not used yet.
 PriveledgedGroups = {
 	superadmin = true,
-	superadmin,
 }
 -- You set a group max textscreen limit here enjoy :)
 MaxTextScreenLimit = {
